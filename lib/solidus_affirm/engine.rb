@@ -4,7 +4,7 @@ require 'spree/core'
 
 module SolidusAffirm
   class Engine < Rails::Engine
-    include SolidusSupport::EngineExtensions
+    include SolidusAffirm::EngineExtensions
 
     isolate_namespace ::Spree
 
@@ -22,6 +22,10 @@ module SolidusAffirm
       end
     end
 
+    initializer "spree.solidus_affirm.environment", before: :load_config_initializers do |_app|
+      SolidusAffirm::Config = SolidusAffirm::Configuration.new
+    end
+    
     initializer "register_solidus_affirm_gateway", after: "spree.register.payment_methods" do |app|
       app.config.spree.payment_methods << 'SolidusAffirm::Gateway'
     end
